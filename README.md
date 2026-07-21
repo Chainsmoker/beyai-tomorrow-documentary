@@ -1,88 +1,83 @@
-<img src="https://github.com/remotion-dev/template-next/assets/1629785/9092db5f-7c0c-4d38-97c4-5f5a61f5cc098" />
-<br/>
-<br/>
+# BeyAI Tomorrow — Documentary
 
-This is a Next.js template for building programmatic video apps, with [`@remotion/player`](https://remotion.dev/player) and [`@remotion/lambda`](https://remotion.dev/lambda) built in.
+A Remotion-based documentary on AI automation, the hollowing-out effect, and the future of work.
 
-This template uses the Next.js App directory, with TailwindCSS. There is a [Non-TailwindCSS version](https://github.com/remotion-dev/template-next-app-dir), and a [Pages directory version](https://github.com/remotion-dev/template-next-pages-dir) of this template available.
+## Stack
 
-<img src="https://github.com/remotion-dev/template-next/assets/1629785/c9c2e5ca-2637-4ec8-8e40-a8feb5740d88" />
+- **Remotion 4.x** — programmatic video composition
+- **Next.js 14** — web studio + player
+- **TypeScript**, **Tailwind v4**
+- **faster-whisper** — voice transcripts with word-level timestamps for sync
 
-## Getting Started
-
-[Use this template](https://github.com/new?template_name=template-next-app-dir-tailwind&template_owner=remotion-dev) to clone it into your GitHub account. Run
-
-```
-npm i
-```
-
-afterwards. Alternatively, use this command to scaffold a project:
+## Structure
 
 ```
-npx create-video@latest --next-tailwind
+src/remotion/
+├── Root.tsx                  Main composition (concatenates 13 scenes via Series)
+├── Scene01.tsx ... Scene15.tsx  One component per scene, voice-synced
+├── lib/
+│   ├── audio.ts              Voice duration fallbacks
+│   ├── transcript.ts         Whisper JSON helpers (frameFor / rangeFor)
+│   └── ...
+├── components/Watermark.tsx  Reusable BeyAI logo overlay
+└── scenes/
+    ├── scene-01/Visual.tsx   Cold Open — typewriter + B-roll montage
+    ├── scene-02/Visual.tsx   Title reveal
+    ├── scene-03/GoldmanVisual.tsx  Goldman globe 300M
+    ├── scene-04/Visual.tsx   WEF bars 83M/69M/14M gap
+    ├── scene-05/Visual.tsx   OpenAI code terminal
+    ├── scene-06/Visual.tsx   Copywriters split screen
+    ├── scene-07/Visual.tsx   Optimists history + Atomoglu
+    ├── scene-08/Visual.tsx   Cognitive transition valley
+    ├── scene-09/Visual.tsx   Triple split CEO/designer/plumber
+    ├── scene-10/Visual.tsx   Chegg/IBM/Klarna cases
+    ├── scene-11/Visual.tsx   Attrition by AI (office avatars)
+    ├── scene-12/Visual.tsx   Centaur Model
+    ├── scene-13/Visual.tsx   How to Survive
+    ├── scene-14/Visual.tsx   The Final Question (zoom out)
+    └── scene-15/Visual.tsx   CTA outro
+
+public/
+├── broll/   Stock B-roll (Pexels, gitignored)
+├── music/   Background tracks (gitignored)
+├── sfx/     Sound effects (gitignored)
+└── voice/   Narration .mp3 + .json transcripts (mp3 gitignored)
 ```
 
-## Commands
+## Rendering
 
-Start the Next.js dev server:
-
-```
-npm run dev
-```
-
-Open the Remotion Studio:
-
-```
-npx remotion studio
+### Single scene
+```bash
+pnpm exec remotion render scene-01 out/scene-01.mp4 --public-dir=public
 ```
 
-Render a video locally:
-
+### Full video
+```bash
+bash scripts/render-all-scenes.sh
 ```
-npx remotion render
-```
+Renders each scene sequentially then concatenates with `ffmpeg -c copy` (no re-encoding).
 
-Upgrade Remotion:
-
-```
-npx remotion upgrade
-```
-
-The following script will set up your Remotion Bundle and Lambda function on AWS:
-
-```
-node deploy.mjs
+### Single frame for testing
+```bash
+pnpm exec remotion still scene-01 out/frame.png --frames=0 --public-dir=public
 ```
 
-You should run this script after:
+## Audio sync workflow
 
-- changing the video template
-- changing `config.mjs`
-- upgrading Remotion to a newer version
+1. Drop narration `.mp3` files into `public/voice/`
+2. Run `bash scripts/transcribe-voices.sh` (uses faster-whisper)
+3. Reference word timings in scene code:
+   ```ts
+   import transcript from "../../public/voice/03_Chapter_4.json";
+   const singleFrame = frameFor(transcript, "single line");
+   ```
 
-## Set up rendering on AWS Lambda
+## Configuration
 
-This template supports rendering the videos via [Remotion Lambda](https://remotion.dev/lambda).
+`remotion.config.ts`:
+- Codec: h264
+- CRF: 18 (high quality)
+- Pixel format: yuv420p (browser-compatible)
+- Color space: rec709
 
-1. Copy the `.env.example` file to `.env` and fill in the values.
-   Complete the [Lambda setup guide](https://www.remotion.dev/docs/lambda/setup) to get your AWS credentials.
-
-1. Edit the `config.mjs` file to your desired Lambda settings.
-
-1. Run `node deploy.mjs` to deploy your Lambda function and Remotion Bundle.
-
-## Docs
-
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
-
-## Help
-
-We provide help on our [Discord server](https://remotion.dev/discord).
-
-## Issues
-
-Found an issue with Remotion? [File an issue here](https://remotion.dev/issue).
-
-## License
-
-Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+Output: 1920x1080 @ 30fps.
