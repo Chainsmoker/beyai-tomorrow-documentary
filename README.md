@@ -46,16 +46,18 @@ public/
 
 ## Rendering
 
+### One-command setup + full render (recommended)
+```bash
+pnpm install && bash scripts/render-all-scenes.sh
+```
+On first run this downloads ~1.9GB assets from [GitHub Releases](https://github.com/Chainsmoker/beyai-tomorrow-documentary/releases/tag/v1.0-assets), then renders each scene sequentially and concatenates with `ffmpeg -c copy`.
+
+Output: `out/full.mp4` (1080p, ~250 MB).
+
 ### Single scene
 ```bash
 pnpm exec remotion render scene-01 out/scene-01.mp4 --public-dir=public
 ```
-
-### Full video
-```bash
-bash scripts/render-all-scenes.sh
-```
-Renders each scene sequentially then concatenates with `ffmpeg -c copy` (no re-encoding).
 
 ### Single frame for testing
 ```bash

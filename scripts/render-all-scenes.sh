@@ -8,6 +8,12 @@ PROJECT_ROOT=$(pwd)
 OUT_DIR="$PROJECT_ROOT/out"
 mkdir -p "$OUT_DIR"
 
+# Step 0: download assets if missing
+if [ ! -f "$PROJECT_ROOT/public/voice/00_Chapter_1.mp3" ]; then
+  echo "=== Step 0: Downloading assets (one-time setup) ==="
+  bash "$PROJECT_ROOT/scripts/setup-assets.sh"
+fi
+
 echo "=== Step 1/2: Rendering scenes sequentially ==="
 
 FAILED=()
