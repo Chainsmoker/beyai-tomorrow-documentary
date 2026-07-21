@@ -37,3 +37,29 @@ next-env.d.ts
 out/
 .env
 build
+
+# Remotion
+/.cache
+/remotion-render
+/public/.DS_Store
+
+# Large video/audio assets (Pexels downloads)
+/public/broll/*.mp4
+/public/music/*.mp3
+/public/sfx/*.mp3
+/public/sfx/*.mp4
+/public/voice/*.mp3
+/public/voice/*.json
+
+# Local config
+.env
+.env.local
+.DS_Store
+
+# Agent local configs (Claude/Cursor/Trae/etc)
+/.agent/
+/.agents/
+/.claude/
+/.codex/
+/.gemini/
+/.opencode/

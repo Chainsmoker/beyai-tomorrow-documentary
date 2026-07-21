@@ -9,3 +9,11 @@ import { webpackOverride } from "./src/remotion/webpack-override.mjs";
 Config.setVideoImageFormat("jpeg");
 
 Config.overrideWebpackConfig(webpackOverride);
+
+Config.setCodec("h264");
+
+Config.setCrf(18);
+
+Config.setPixelFormat("yuv420p");
+
+Config.setColorSpace("rec709");

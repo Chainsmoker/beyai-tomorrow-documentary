@@ -6,25 +6,22 @@ import { useMemo, useState } from "react";
 import { z } from "zod";
 import {
   CompositionProps,
-  defaultMyCompProps,
   DURATION_IN_FRAMES,
   VIDEO_FPS,
   VIDEO_HEIGHT,
   VIDEO_WIDTH,
 } from "../../types/constants";
+import { Main } from "../remotion/Root";
 import { RenderControls } from "../components/RenderControls";
 import { Spacing } from "../components/Spacing";
 import { Tips } from "../components/Tips";
-import { Main } from "../remotion/MyComp/Main";
 
 const Home: NextPage = () => {
-  const [text, setText] = useState<string>(defaultMyCompProps.title);
+  const [text, setText] = useState<string>("");
 
   const inputProps: z.infer<typeof CompositionProps> = useMemo(() => {
-    return {
-      title: text,
-    };
-  }, [text]);
+    return {};
+  }, []);
 
   return (
     <div>
